@@ -1,83 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!--<TextView-->
-    <!--android:id="@+id/label"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="Type here:" />-->
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Type here:" />
 
-    <!--<EditText-->
-    <!--android:id="@+id/entry"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@id/label"-->
-    <!--android:background="@android:drawable/editbox_background" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/open"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_below="@id/entry"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:text="Open" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/send"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignTop="@id/open"-->
-    <!--android:layout_toLeftOf="@id/open"-->
-    <!--android:text="Send" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/close"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignTop="@id/send"-->
-    <!--android:layout_toLeftOf="@id/send"-->
-    <!--android:text="Close" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/graph"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignTop="@+id/close"-->
-    <!--android:layout_toLeftOf="@id/close"-->
-    <!--android:text="Plot"/>-->
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <Button
-            android:id="@+id/open"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Open" />
-
-        <Button
-            android:id="@+id/close"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Close"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
+    <EditText
+        android:id="@+id/entry"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label"
+        android:background="@android:drawable/editbox_background" />
 
     <Button
-        android:id="@+id/plot"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Plot Graph" />
+        android:id="@+id/open"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/entry"
+        android:layout_alignParentEnd="true"
+        android:text="Open" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/open"
+        android:layout_toStartOf="@id/open"
+        android:text="Send" />
+
+    <Button
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/send"
+        android:layout_toStartOf="@id/send"
+        android:text="Close" />
+
+    <Button
+        android:id="@+id/plot_graph"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/close"
+        android:layout_toStartOf="@id/close"
+        android:text="Plot" />
+
+
+</RelativeLayout>

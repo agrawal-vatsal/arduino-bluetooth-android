@@ -9,18 +9,18 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
-    //    TextView myLabel;
-//    EditText myTextbox;
+    TextView myLabel;
+    EditText myTextbox;
     BluetoothAdapter mBluetoothAdapter;
     BluetoothSocket mmSocket;
     BluetoothDevice mmDevice;
@@ -29,56 +29,49 @@ public class MainActivity extends AppCompatActivity {
     Thread workerThread;
     byte[] readBuffer;
     int readBufferPosition;
-    //    int counter;
-    volatile boolean stopWorker;
-    static final String DEVICE_NAME = "";
-    String finalData;
+    int counter;
     Button graphPlot;
-
+    volatile boolean stopWorker;
+    String finalData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button openButton = findViewById(R.id.open);
-//        Button sendButton = findViewById(R.id.send);
+        Button sendButton = findViewById(R.id.send);
         Button closeButton = findViewById(R.id.close);
-        graphPlot = findViewById(R.id.plot);
-//        myLabel = findViewById(R.id.label);
-//        myTextbox = findViewById(R.id.entry);
+        myLabel = findViewById(R.id.label);
+        myTextbox = findViewById(R.id.entry);
+        graphPlot = findViewById(R.id.plot_graph);
 
         //Open Button
-        openButton.setOnClickListener((View v) -> {
+        openButton.setOnClickListener(v -> {
             try {
                 findBT();
                 openBT();
-                openButton.setVisibility(View.GONE);
-                closeButton.setVisibility(View.VISIBLE);
-                openButton.setClickable(false);
-                closeButton.setClickable(true);
             } catch (IOException ignored) {
             }
         });
 
-//        sendButton.setOnClickListener((View v) -> {
-//            try {
-//                sendData();
-//            } catch (IOException ignored) {
-//            }
-//        });
+        //Send Button
+        sendButton.setOnClickListener(v -> {
+            try {
+                sendData();
+            } catch (IOException ignored) {
+            }
+        });
 
-        closeButton.setOnClickListener((View v) -> {
+        //Close button
+        closeButton.setOnClickListener(v -> {
             try {
                 closeBT();
-                openButton.setVisibility(View.VISIBLE);
-                closeButton.setVisibility(View.GONE);
-                openButton.setClickable(true);
-                closeButton.setClickable(false);
             } catch (IOException ignored) {
             }
         });
 
         graphPlot.setOnClickListener((View v) -> {
+            finalData = myLabel.getText().toString();
             Intent i = new Intent(MainActivity.this, GraphPlotActivity.class);
             i.putExtra("data", finalData);
             startActivity(i);
@@ -88,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
     void findBT() {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(), "No Bluetooth adapter available", Toast.LENGTH_SHORT).show();
-            return;
+            myLabel.setText("No bluetooth adapter available");
         }
 
         if (!mBluetoothAdapter.isEnabled()) {
@@ -100,14 +92,13 @@ public class MainActivity extends AppCompatActivity {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
-                if (device.getName().equals(DEVICE_NAME)) {
+                if (device.getName().equals("VATSAL")) {
                     mmDevice = device;
                     break;
                 }
             }
         }
-//        myLabel.setText("Bluetooth Device Found");
-        Toast.makeText(getApplicationContext(), "Bluetooth Device Found", Toast.LENGTH_SHORT).show();
+        myLabel.setText("Bluetooth Device Found");
     }
 
     void openBT() throws IOException {
@@ -119,8 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         beginListenForData();
 
-//        myLabel.setText("Bluetooth Opened");
-        Toast.makeText(getApplicationContext(), "Bluetooth Openede", Toast.LENGTH_SHORT).show();
+        myLabel.setText("Bluetooth Opened");
     }
 
     void beginListenForData() {
@@ -142,16 +132,15 @@ public class MainActivity extends AppCompatActivity {
                             if (b == delimiter) {
                                 byte[] encodedBytes = new byte[readBufferPosition];
                                 System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
-                                final String data = new String(encodedBytes, StandardCharsets.US_ASCII);
+                                final String data = new String(encodedBytes, "US-ASCII");
                                 readBufferPosition = 0;
 
-                                handler.post(() -> finalData = data);
+                                handler.post(() -> myLabel.setText(data));
                             } else {
                                 readBuffer[readBufferPosition++] = b;
                             }
                         }
                     }
-                    Toast.makeText(getApplicationContext(), "All data stored", Toast.LENGTH_SHORT).show();
                 } catch (IOException ex) {
                     stopWorker = true;
                 }
@@ -161,19 +150,18 @@ public class MainActivity extends AppCompatActivity {
         workerThread.start();
     }
 
-//    void sendData() throws IOException {
-//        String msg = myTextbox.getText().toString();
-//        msg += "\n";
-//        mmOutputStream.write(msg.getBytes());
-//        myLabel.setText("Data Sent");
-//    }
+    void sendData() throws IOException {
+        String msg = myTextbox.getText().toString();
+        msg += "\n";
+        mmOutputStream.write(msg.getBytes());
+        myLabel.setText("Data Sent");
+    }
 
     void closeBT() throws IOException {
         stopWorker = true;
         mmOutputStream.close();
         mmInputStream.close();
         mmSocket.close();
-//        myLabel.setText("Bluetooth Closed");
-        Toast.makeText(getApplicationContext(), "Bluetooth Closed", Toast.LENGTH_SHORT).show();
+        myLabel.setText("Bluetooth Closed");
     }
 }
